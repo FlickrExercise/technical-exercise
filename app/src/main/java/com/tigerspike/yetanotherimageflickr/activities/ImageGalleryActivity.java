@@ -1,10 +1,10 @@
 
 package com.tigerspike.yetanotherimageflickr.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.GridLayoutManager;
@@ -26,6 +26,7 @@ public class ImageGalleryActivity extends AppCompatActivity implements AsyncFlic
     private RecyclerView imageRecyclerView;
     private ImageGalleryAdapter imageGalleryAdapter;
 
+    ProgressDialog progressDialog;
     public static final String LOG_TAG = ImageGalleryActivity.class.getSimpleName();
 
     @Override
@@ -38,6 +39,9 @@ public class ImageGalleryActivity extends AppCompatActivity implements AsyncFlic
             Toast.makeText(this, "Custom error message replacing " + errorMessage, Toast.LENGTH_SHORT).show();
         }
 
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
     @Override
@@ -60,6 +64,11 @@ public class ImageGalleryActivity extends AppCompatActivity implements AsyncFlic
         asyncFlickrClient = new AsyncFlickrClient();
         asyncFlickrClient.fetchFlickrImages(this);
 
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+//                progressDialog.setMessage("loading");
+                progressDialog.show();
+        }
         configureRecyclerView();
 
     }
